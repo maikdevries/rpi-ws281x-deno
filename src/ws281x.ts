@@ -139,6 +139,8 @@ export default class Driver {
 
 		this.buffer = null;
 		this.view = null;
+
+		return bindings.close();
 	}
 
 	public render(): void {
