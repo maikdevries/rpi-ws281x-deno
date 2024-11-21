@@ -25,20 +25,11 @@ export interface Channel {
 	invert: boolean;
 	count: number;
 	strip: keyof typeof STRIP_TYPES;
-	leds: null;
 	brightness: number;
-	white: 0;
-	red: 0;
-	green: 0;
-	blue: 0;
-	gamma: null;
 }
 
 // [REF] https://github.com/jgarff/rpi_ws281x/blob/7fc0bf8b31d715bbecf28e852ede5aaa388180da/ws2811.h#L86
 export interface Strip {
-	timeout: bigint;
-	device: null;
-	hardware: null;
 	frequency: number;
 	dma: 8 | 9 | 10 | 11 | 12 | 13 | 14;
 	channels: [Channel, Channel];

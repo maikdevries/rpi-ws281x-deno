@@ -36,15 +36,12 @@ export default class Driver {
 		let offset = 0;
 
 		// [TYPE] uint64_t ws2811_t.render_wait_time
-		view.setBigUint64(offset, config.timeout, Driver.ENDIANNESS);
 		offset += 8;
 
 		// [TYPE] * ws2811_t.device
-		view.setBigUint64(offset, config.device, Driver.ENDIANNESS);
 		offset += 8;
 
 		// [TYPE] * ws2811_t.rpi_hw
-		view.setBigUint64(offset, config.hardware, Driver.ENDIANNESS);
 		offset += 8;
 
 		// [TYPE] uint32_t ws2811_t.freq
@@ -73,7 +70,6 @@ export default class Driver {
 			offset += 4;
 
 			// [TYPE] * ws2811_channel_t.leds
-			view.setBigUint64(offset, channel.leds, Driver.ENDIANNESS);
 			offset += 8;
 
 			// [TYPE] uint8_t ws2811_channel_t.brightness
@@ -81,26 +77,21 @@ export default class Driver {
 			offset += 1;
 
 			// [TYPE] uint8_t ws2811_channel_t.wshift
-			view.setUint8(offset, channel.white);
 			offset += 1;
 
 			// [TYPE] uint8_t ws2811_channel_t.rshift
-			view.setUint8(offset, channel.red);
 			offset += 1;
 
 			// [TYPE] uint8_t ws2811_channel_t.gshift
-			view.setUint8(offset, channel.green);
 			offset += 1;
 
 			// [TYPE] uint8_t ws2811_channel_t.bshift
-			view.setUint8(offset, channel.blue);
 			offset += 1;
 
 			// [NOTE] Additional padding to align offset to multiple of 4 bytes
 			offset += 3;
 
 			// [TYPE] * ws2811_channel_t.gamma
-			view.setBigUint64(offset, channel.gamma, Driver.ENDIANNESS);
 			offset += 8;
 		}
 
