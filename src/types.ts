@@ -21,7 +21,7 @@ export const STRIP_TYPES = {
 
 // [REF] https://github.com/jgarff/rpi_ws281x/blob/7fc0bf8b31d715bbecf28e852ede5aaa388180da/ws2811.h#L71
 export interface Channel {
-	gpio: number;
+	gpio: 10 | 12 | 13 | 18 | 19 | 21 | 31 | 38 | 40 | 41 | 45 | 52 | 53;
 	invert: boolean;
 	count: number;
 	strip: keyof typeof STRIP_TYPES;
@@ -40,7 +40,7 @@ export interface Strip {
 	device: null;
 	hardware: null;
 	frequency: number;
-	dma: number;
+	dma: 8 | 9 | 10 | 11 | 12 | 13 | 14;
 	channels: [Channel, Channel];
 }
 
