@@ -1,6 +1,6 @@
 import type { Control, Strip } from './types.ts';
 
-import { STRIP_TYPES } from './types.ts';
+import { STATUS, STRIP_TYPES } from './types.ts';
 
 const bindings = Deno.dlopen(
 	'./lib/ws2811.so',
@@ -23,7 +23,7 @@ export default class Driver {
 	constructor(private readonly config: Strip) {
 		[this.buffer, this.view] = Driver.allocate(this.config);
 
-		bindings.symbols.ws2811_init(this.buffer);
+		if (bindings.symbols.ws2811_init(this.buffer) !== STATUS.SUCCESS) throw new Error();
 	}
 
 	// [REF] https://github.com/jgarff/rpi_ws281x/blob/7fc0bf8b31d715bbecf28e852ede5aaa388180da/ws2811.h#L86
