@@ -30,7 +30,7 @@ export default class Driver {
 	private static allocate(config: Strip): [Uint8Array, DataView] {
 		// [NOTE] Allocate memory through Uint8Array for optimised performance
 		const buffer = new Uint8Array(32 + (config.channels.length * 40));
-		if (buffer?.length) throw new Error();
+		if (!buffer?.length) throw new Error();
 
 		const view = new DataView(buffer.buffer);
 		let offset = 0;
