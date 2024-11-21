@@ -1,4 +1,4 @@
-import type { Strip } from './types.ts';
+import type { Control, Strip } from './types.ts';
 
 import { STRIP_TYPES } from './types.ts';
 
@@ -103,5 +103,28 @@ export default class Controller {
 		}
 
 		return [buffer, view];
+	}
+
+	private static retrieve(view: DataView, offset: number, size: number): Uint32Array {
+		const pointer = Deno.UnsafePointer.create(view.getBigUint64(offset, Controller.ENDIANNESS));
+		if (!pointer) throw new Error();
+
+		const buffer = new Uint32Array(Deno.UnsafePointerView.getArrayBuffer(pointer, size * 4));
+		if (!buffer?.length) throw new Error();
+
+		return buffer;
+	}
+
+	public retrieveControls(): [Control, Control] {
+		return [
+			{
+				'leds': Controller.retrieve(this.view, 48, this.config.channels[0].count),
+				'brightness': this.buffer.subarray(56),
+			},
+			{
+				'leds': Controller.retrieve(this.view, 88, this.config.channels[1].count),
+				'brightness': this.buffer.subarray(96),
+			},
+		];
 	}
 }

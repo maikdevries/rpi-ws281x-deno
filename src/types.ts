@@ -62,3 +62,8 @@ export const STATUS = {
 	ERROR_SPI_SETUP: -13,
 	ERROR_SPI_TRANSFER: -14,
 } as const;
+
+export interface Control {
+	leds: Uint32Array;
+	brightness: Uint8Array;
+}
