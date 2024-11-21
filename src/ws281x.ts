@@ -13,7 +13,7 @@ const bindings = Deno.dlopen(
 	} as const,
 );
 
-export default class Controller {
+export default class Driver {
 	// [TODO]
 	private static ENDIANNESS = true;
 
@@ -21,7 +21,7 @@ export default class Controller {
 	private view: DataView;
 
 	constructor(private readonly config: Strip) {
-		[this.buffer, this.view] = Controller.allocate(this.config);
+		[this.buffer, this.view] = Driver.allocate(this.config);
 
 		bindings.symbols.ws2811_init(this.buffer);
 	}
@@ -34,44 +34,44 @@ export default class Controller {
 		let offset = 0;
 
 		// [TYPE] uint64_t ws2811_t.render_wait_time
-		view.setBigUint64(offset, config.timeout, Controller.ENDIANNESS);
+		view.setBigUint64(offset, config.timeout, Driver.ENDIANNESS);
 		offset += 8;
 
 		// [TYPE] * ws2811_t.device
-		view.setBigUint64(offset, config.device, Controller.ENDIANNESS);
+		view.setBigUint64(offset, config.device, Driver.ENDIANNESS);
 		offset += 8;
 
 		// [TYPE] * ws2811_t.rpi_hw
-		view.setBigUint64(offset, config.hardware, Controller.ENDIANNESS);
+		view.setBigUint64(offset, config.hardware, Driver.ENDIANNESS);
 		offset += 8;
 
 		// [TYPE] uint32_t ws2811_t.freq
-		view.setUint32(offset, config.frequency, Controller.ENDIANNESS);
+		view.setUint32(offset, config.frequency, Driver.ENDIANNESS);
 		offset += 4;
 
 		// [TYPE] int ws2811_t.dmanum
-		view.setInt32(offset, config.dma, Controller.ENDIANNESS);
+		view.setInt32(offset, config.dma, Driver.ENDIANNESS);
 		offset += 4;
 
 		for (const channel of config.channels) {
 			// [TYPE] int ws2811_channel_t.gpionum
-			view.setInt32(offset, channel.gpio, Controller.ENDIANNESS);
+			view.setInt32(offset, channel.gpio, Driver.ENDIANNESS);
 			offset += 4;
 
 			// [TYPE] int ws2811_channel_t.invert
-			view.setInt32(offset, Number(channel.invert), Controller.ENDIANNESS);
+			view.setInt32(offset, Number(channel.invert), Driver.ENDIANNESS);
 			offset += 4;
 
 			// [TYPE] int ws2811_channel_t.count
-			view.setInt32(offset, channel.count, Controller.ENDIANNESS);
+			view.setInt32(offset, channel.count, Driver.ENDIANNESS);
 			offset += 4;
 
 			// [TYPE] int ws2811_channel_t.strip_type
-			view.setInt32(offset, STRIP_TYPES[channel.strip], Controller.ENDIANNESS);
+			view.setInt32(offset, STRIP_TYPES[channel.strip], Driver.ENDIANNESS);
 			offset += 4;
 
 			// [TYPE] * ws2811_channel_t.leds
-			view.setBigUint64(offset, channel.leds, Controller.ENDIANNESS);
+			view.setBigUint64(offset, channel.leds, Driver.ENDIANNESS);
 			offset += 8;
 
 			// [TYPE] uint8_t ws2811_channel_t.brightness
@@ -98,7 +98,7 @@ export default class Controller {
 			offset += 3;
 
 			// [TYPE] * ws2811_channel_t.gamma
-			view.setBigUint64(offset, channel.gamma, Controller.ENDIANNESS);
+			view.setBigUint64(offset, channel.gamma, Driver.ENDIANNESS);
 			offset += 8;
 		}
 
@@ -106,7 +106,7 @@ export default class Controller {
 	}
 
 	private static retrieve(view: DataView, offset: number, size: number): Uint32Array {
-		const pointer = Deno.UnsafePointer.create(view.getBigUint64(offset, Controller.ENDIANNESS));
+		const pointer = Deno.UnsafePointer.create(view.getBigUint64(offset, Driver.ENDIANNESS));
 		if (!pointer) throw new Error();
 
 		const buffer = new Uint32Array(Deno.UnsafePointerView.getArrayBuffer(pointer, size * 4));
@@ -118,11 +118,11 @@ export default class Controller {
 	public retrieveControls(): [Control, Control] {
 		return [
 			{
-				'leds': Controller.retrieve(this.view, 48, this.config.channels[0].count),
+				'leds': Driver.retrieve(this.view, 48, this.config.channels[0].count),
 				'brightness': this.buffer.subarray(56),
 			},
 			{
-				'leds': Controller.retrieve(this.view, 88, this.config.channels[1].count),
+				'leds': Driver.retrieve(this.view, 88, this.config.channels[1].count),
 				'brightness': this.buffer.subarray(96),
 			},
 		];
