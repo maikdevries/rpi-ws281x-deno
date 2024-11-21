@@ -119,11 +119,11 @@ export default class Driver {
 		return [
 			{
 				'leds': Driver.retrieve(this.view, 48, this.config.channels[0].count),
-				'brightness': this.buffer.subarray(56),
+				'brightness': this.buffer.subarray(56, 57),
 			},
 			{
 				'leds': Driver.retrieve(this.view, 88, this.config.channels[1].count),
-				'brightness': this.buffer.subarray(96),
+				'brightness': this.buffer.subarray(96, 97),
 			},
 		];
 	}
