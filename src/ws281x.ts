@@ -140,4 +140,10 @@ export default class Driver {
 		this.buffer = null;
 		this.view = null;
 	}
+
+	public render(): void {
+		if (!this.buffer?.length || !this.view) throw new Error();
+
+		if (bindings.symbols.ws2811_render(this.buffer) !== STATUS.SUCCESS) throw new Error();
+	}
 }
