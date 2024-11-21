@@ -17,8 +17,8 @@ export default class Driver {
 	// [TODO]
 	private static ENDIANNESS = true;
 
-	private buffer: Uint8Array;
-	private view: DataView;
+	private buffer: Uint8Array | null;
+	private view: DataView | null;
 
 	constructor(private readonly config: Strip) {
 		[this.buffer, this.view] = Driver.allocate(this.config);
@@ -30,6 +30,8 @@ export default class Driver {
 	private static allocate(config: Strip): [Uint8Array, DataView] {
 		// [NOTE] Allocate memory through Uint8Array for optimised performance
 		const buffer = new Uint8Array(32 + (config.channels.length * 40));
+		if (buffer?.length) throw new Error();
+
 		const view = new DataView(buffer.buffer);
 		let offset = 0;
 
@@ -116,6 +118,8 @@ export default class Driver {
 	}
 
 	public retrieveControls(): [Control, Control] {
+		if (!this.buffer?.length || !this.view) throw new Error();
+
 		return [
 			{
 				'leds': Driver.retrieve(this.view, 48, this.config.channels[0].count),
@@ -126,5 +130,14 @@ export default class Driver {
 				'brightness': this.buffer.subarray(96, 97),
 			},
 		];
+	}
+
+	public finalise(): void {
+		if (!this.buffer?.length || !this.view) throw new Error();
+
+		bindings.symbols.ws2811_fini(this.buffer);
+
+		this.buffer = null;
+		this.view = null;
 	}
 }
