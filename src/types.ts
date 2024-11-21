@@ -32,7 +32,7 @@ export interface Channel {
 export interface Strip {
 	frequency?: number;
 	dma?: 8 | 9 | 10 | 11 | 12 | 13 | 14;
-	channels: [Channel, Channel];
+	channels: [Channel] | [Channel, Channel];
 }
 
 // [REF] https://github.com/jgarff/rpi_ws281x/blob/7fc0bf8b31d715bbecf28e852ede5aaa388180da/ws2811.h#L96

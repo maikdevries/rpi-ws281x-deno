@@ -131,19 +131,18 @@ export default class Driver {
 		return buffer;
 	}
 
-	public retrieveControls(): [Control, Control] {
+	public retrieveControls(): [Control] | [Control, Control] {
 		if (!this.buffer?.length || !this.view) throw new Error();
 
-		return [
-			{
-				'leds': Driver.retrieve(this.view, 48, this.config.channels[0].count),
-				'brightness': this.buffer.subarray(56, 57),
-			},
-			{
-				'leds': Driver.retrieve(this.view, 88, this.config.channels[1].count),
-				'brightness': this.buffer.subarray(96, 97),
-			},
-		];
+		const controls: [Control] = [{
+			'leds': Driver.retrieve(this.view, 48, this.config.channels[0].count),
+			'brightness': this.buffer.subarray(56, 57),
+		}];
+
+		return !this.config.channels[1] ? controls : [...controls, {
+			'leds': Driver.retrieve(this.view, 88, this.config.channels[1].count),
+			'brightness': this.buffer.subarray(96, 97),
+		}];
 	}
 
 	public finalise(): void {
