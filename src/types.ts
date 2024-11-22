@@ -58,3 +58,7 @@ export interface Control {
 	leds: Uint32Array;
 	brightness: Uint8Array;
 }
+
+export type Validator<T> = {
+	[K in keyof T]: (value: unknown) => boolean;
+};
