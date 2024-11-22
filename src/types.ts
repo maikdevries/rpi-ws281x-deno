@@ -20,7 +20,7 @@ export const STRIP_TYPES = {
 } as const;
 
 // [REF] https://github.com/jgarff/rpi_ws281x/blob/7fc0bf8b31d715bbecf28e852ede5aaa388180da/ws2811.h#L71
-interface ChannelConfiguration {
+export interface ChannelConfiguration {
 	gpio?: 10 | 12 | 13 | 18 | 19 | 21 | 31 | 38 | 40 | 41 | 45 | 52 | 53;
 	invert?: boolean;
 	count: number;
@@ -31,7 +31,7 @@ interface ChannelConfiguration {
 export type Channel = Required<ChannelConfiguration>;
 
 // [REF] https://github.com/jgarff/rpi_ws281x/blob/7fc0bf8b31d715bbecf28e852ede5aaa388180da/ws2811.h#L86
-interface StripConfiguration<T extends Channel | ChannelConfiguration> {
+export interface StripConfiguration<T extends Channel | ChannelConfiguration> {
 	frequency?: number;
 	dma?: 8 | 9 | 10 | 11 | 12 | 13 | 14;
 	channels: [T] | [T, T];

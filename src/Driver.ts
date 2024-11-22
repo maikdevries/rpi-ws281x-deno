@@ -1,4 +1,4 @@
-import type { Channel, Control, Strip } from './types.ts';
+import type { Control, Strip } from './types.ts';
 
 import { STATUS, STRIP_TYPES } from './types.ts';
 import * as validate from './validators.ts';
@@ -20,27 +20,6 @@ export default class Driver {
 
 	private buffer: Uint8Array | null;
 	private view: DataView | null;
-
-	private static defaults: Strip = {
-		'frequency': 800000,
-		'dma': 10,
-		channels: [
-			{
-				'gpio': 18,
-				'invert': false,
-				'count': 0,
-				'strip': 'WS2812',
-				'brightness': 255,
-			},
-			{
-				'gpio': 13,
-				'invert': false,
-				'count': 0,
-				'strip': 'WS2812',
-				'brightness': 255,
-			},
-		],
-	};
 
 	constructor(private readonly config: Strip) {
 		if (!validate.strip(config)) throw new Error();
@@ -69,22 +48,20 @@ export default class Driver {
 		offset += 8;
 
 		// [TYPE] uint32_t ws2811_t.freq
-		view.setUint32(offset, config.frequency ?? Driver.defaults.frequency, Driver.ENDIANNESS);
+		view.setUint32(offset, config.frequency, Driver.ENDIANNESS);
 		offset += 4;
 
 		// [TYPE] int ws2811_t.dmanum
-		view.setInt32(offset, config.dma ?? Driver.defaults.dma, Driver.ENDIANNESS);
+		view.setInt32(offset, config.dma, Driver.ENDIANNESS);
 		offset += 4;
 
-		for (const [i, channel] of config.channels.entries()) {
-			const defaults = Driver.defaults.channels[i] as Required<Channel>;
-
+		for (const channel of config.channels) {
 			// [TYPE] int ws2811_channel_t.gpionum
-			view.setInt32(offset, channel.gpio ?? defaults.gpio, Driver.ENDIANNESS);
+			view.setInt32(offset, channel.gpio, Driver.ENDIANNESS);
 			offset += 4;
 
 			// [TYPE] int ws2811_channel_t.invert
-			view.setInt32(offset, Number(channel.invert ?? defaults.invert), Driver.ENDIANNESS);
+			view.setInt32(offset, Number(channel.invert), Driver.ENDIANNESS);
 			offset += 4;
 
 			// [TYPE] int ws2811_channel_t.count
@@ -99,7 +76,7 @@ export default class Driver {
 			offset += 8;
 
 			// [TYPE] uint8_t ws2811_channel_t.brightness
-			view.setUint8(offset, channel.brightness ?? defaults.brightness);
+			view.setUint8(offset, channel.brightness);
 			offset += 1;
 
 			// [TYPE] uint8_t ws2811_channel_t.wshift
