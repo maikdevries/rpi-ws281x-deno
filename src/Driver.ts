@@ -1,4 +1,4 @@
-import type { Control, Strip } from './types.ts';
+import type { ChannelData, Strip } from './types.ts';
 
 import { STATUS, STRIP_TYPES } from './types.ts';
 import * as validate from './validators.ts';
@@ -111,15 +111,15 @@ export default class Driver {
 		return buffer;
 	}
 
-	public retrieveControls(): [Control] | [Control, Control] {
+	public retrieveChannels(): [ChannelData] | [ChannelData, ChannelData] {
 		if (!this.buffer?.length || !this.view) throw new Error();
 
-		const controls: [Control] = [{
+		const channels: [ChannelData] = [{
 			'leds': Driver.retrieve(this.view, 48, this.config.channels[0].count),
 			'brightness': this.buffer.subarray(56, 57),
 		}];
 
-		return !this.config.channels[1] ? controls : [...controls, {
+		return !this.config.channels[1] ? channels : [...channels, {
 			'leds': Driver.retrieve(this.view, 88, this.config.channels[1].count),
 			'brightness': this.buffer.subarray(96, 97),
 		}];

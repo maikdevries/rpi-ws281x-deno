@@ -58,7 +58,7 @@ export const STATUS = {
 	ERROR_SPI_TRANSFER: -14,
 } as const;
 
-export interface Control {
+export interface ChannelData {
 	leds: Uint32Array;
 	brightness: Uint8Array;
 }
