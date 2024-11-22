@@ -1,6 +1,7 @@
 import type { Channel, Control, Strip } from './types.ts';
 
 import { STATUS, STRIP_TYPES } from './types.ts';
+import * as validate from './validators.ts';
 
 const bindings = Deno.dlopen(
 	'./lib/ws2811.so',
@@ -42,6 +43,8 @@ export default class Driver {
 	};
 
 	constructor(private readonly config: Strip) {
+		if (!validate.strip(config)) throw new Error();
+
 		[this.buffer, this.view] = Driver.allocate(this.config);
 
 		if (bindings.symbols.ws2811_init(this.buffer) !== STATUS.SUCCESS) throw new Error();
