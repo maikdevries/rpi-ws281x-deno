@@ -20,7 +20,7 @@ export default class Driver {
 	private buffer: Uint8Array | null;
 	private view: DataView | null;
 
-	private static defaults: Required<Strip> = {
+	private static defaults: Strip = {
 		'frequency': 800000,
 		'dma': 10,
 		channels: [
