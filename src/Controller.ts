@@ -1,9 +1,12 @@
-import type { Channel, ChannelConfiguration, Strip, StripConfiguration } from './types.ts';
+import type { Channel, ChannelConfiguration, ChannelData, Strip, StripConfiguration } from './types.ts';
 
 import Driver from './Driver.ts';
 
 export default class Controller {
 	private readonly driver: Driver;
+
+	public readonly first: Control;
+	public readonly second: Control | undefined;
 
 	private static defaults: Strip = {
 		'frequency': 800000,
@@ -35,5 +38,13 @@ export default class Controller {
 				...channel,
 			})) as [Channel] | [Channel, Channel],
 		});
+
+		const [first, second] = this.driver.retrieveChannels();
+		this.first = new Control(first, this.driver.render.bind(this.driver));
+		this.second = second ? new Control(second, this.driver.render.bind(this.driver)) : undefined;
 	}
+}
+
+class Control {
+	constructor(private readonly channel: ChannelData, private readonly render: () => void) {}
 }
