@@ -15,7 +15,6 @@ const bindings = Deno.dlopen(
 );
 
 export default class Driver {
-	// [TODO]
 	private static ENDIANNESS = true;
 
 	private buffer: Uint8Array | null;
@@ -26,7 +25,10 @@ export default class Driver {
 
 		[this.buffer, this.view] = Driver.allocate(this.config);
 
-		if (bindings.symbols.ws2811_init(this.buffer) !== STATUS.SUCCESS) throw new Error('Failed to initialise driver');
+		if (bindings.symbols.ws2811_init(this.buffer) !== STATUS.SUCCESS) {
+			this.finalise();
+			throw new Error('Failed to initialise driver');
+		}
 	}
 
 	// [REF] https://github.com/jgarff/rpi_ws281x/blob/7fc0bf8b31d715bbecf28e852ede5aaa388180da/ws2811.h#L86
@@ -113,15 +115,20 @@ export default class Driver {
 	public retrieveChannels(): [ChannelData] | [ChannelData, ChannelData] {
 		if (!this.buffer?.length || !this.view) throw new Error('Driver must be initialised before retrieving channels');
 
-		const channels: [ChannelData] = [{
-			'leds': Driver.retrieve(this.view, 48, this.config.channels[0].count),
-			'brightness': this.buffer.subarray(56, 57),
-		}];
+		try {
+			const channels: [ChannelData] = [{
+				'leds': Driver.retrieve(this.view, 48, this.config.channels[0].count),
+				'brightness': this.buffer.subarray(56, 57),
+			}];
 
-		return !this.config.channels[1] ? channels : [...channels, {
-			'leds': Driver.retrieve(this.view, 88, this.config.channels[1].count),
-			'brightness': this.buffer.subarray(96, 97),
-		}];
+			return !this.config.channels[1] ? channels : [...channels, {
+				'leds': Driver.retrieve(this.view, 88, this.config.channels[1].count),
+				'brightness': this.buffer.subarray(96, 97),
+			}];
+		} catch (error: unknown) {
+			this.finalise();
+			throw error;
+		}
 	}
 
 	public finalise(): void {
@@ -138,6 +145,9 @@ export default class Driver {
 	public render(): void {
 		if (!this.buffer?.length || !this.view) throw new Error('Driver must be initialised before rendering');
 
-		if (bindings.symbols.ws2811_render(this.buffer) !== STATUS.SUCCESS) throw new Error('Failed to render LED buffer');
+		if (bindings.symbols.ws2811_render(this.buffer) !== STATUS.SUCCESS) {
+			this.finalise();
+			throw new Error('Failed to render LED buffer');
+		}
 	}
 }

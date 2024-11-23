@@ -40,8 +40,8 @@ export default class Controller {
 		});
 
 		const [first, second] = this.driver.retrieveChannels();
-		this.first = new Control(first, this.driver.render.bind(this.driver));
-		this.second = second ? new Control(second, this.driver.render.bind(this.driver)) : undefined;
+		this.first = new Control(first, this.driver.render.bind(this.driver), this.shutdown.bind(this));
+		this.second = second ? new Control(second, this.driver.render.bind(this.driver), this.shutdown.bind(this)) : undefined;
 	}
 
 	public shutdown(): void {
@@ -53,10 +53,13 @@ export default class Controller {
 }
 
 class Control {
-	constructor(private readonly channel: ChannelData, private readonly render: () => void) {}
+	constructor(private readonly channel: ChannelData, private readonly render: () => void, private readonly shutdown: () => void) {}
 
 	set brightness(value: number) {
-		if (value < 0 || value > 255) throw new RangeError('Channel brightness must be an integer in range [0, 255]');
+		if (value < 0 || value > 255) {
+			this.shutdown();
+			throw new RangeError('Channel brightness must be an integer in range [0, 255]');
+		}
 
 		this.channel.brightness.set([value]);
 		this.render();
@@ -64,6 +67,7 @@ class Control {
 
 	set colour(value: number[]) {
 		if (!value.length || !value.every((v) => typeof v === 'number' && v >= 0x00000000 && v <= 0xFFFFFFFF)) {
+			this.shutdown();
 			throw new RangeError('Channel colour must be an array of integers in range [0x00000000, 0xFFFFFFFF]');
 		}
 
