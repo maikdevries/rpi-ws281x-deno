@@ -78,4 +78,16 @@
 			],
 		},
 	},
+	"publish": {
+		"include": [
+			"lib/rpi_ws281x/*.h",
+			"lib/rpi_ws281x/*.c",
+			"lib/rpi_ws281x/LICENSE",
+			"lib/rpi_ws281x/README.md",
+			"src/**/*.ts",
+			"LICENSE",
+			"mod.ts",
+			"README.md",
+		],
+	},
 }
