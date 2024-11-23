@@ -51,4 +51,11 @@ export default class Controller {
 
 class Control {
 	constructor(private readonly channel: ChannelData, private readonly render: () => void) {}
+
+	set brightness(value: number) {
+		if (value < 0 || value > 255) throw new Error();
+
+		this.channel.brightness.set([value]);
+		this.render();
+	}
 }
