@@ -43,6 +43,10 @@ export default class Controller {
 		this.first = new Control(first, this.driver.render.bind(this.driver));
 		this.second = second ? new Control(second, this.driver.render.bind(this.driver)) : undefined;
 	}
+
+	public shutdown(): void {
+		return this.driver.finalise();
+	}
 }
 
 class Control {
