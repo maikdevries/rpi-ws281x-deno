@@ -45,6 +45,9 @@ export default class Controller {
 	}
 
 	public shutdown(): void {
+		this.first.flush();
+		this.second?.flush();
+
 		return this.driver.finalise();
 	}
 }
