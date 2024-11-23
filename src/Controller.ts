@@ -45,8 +45,8 @@ export default class Controller {
 	}
 
 	public shutdown(): void {
-		this.first.flush();
-		this.second?.flush();
+		this.first.colour = [0x00000000];
+		if (this.second) this.second.colour = [0x00000000];
 
 		return this.driver.finalise();
 	}
@@ -72,11 +72,6 @@ class Control {
 		}
 
 		this.channel.leds.forEach((_, i) => this.channel.leds[i] = value[i % value.length] as number);
-		this.render();
-	}
-
-	public flush(): void {
-		this.channel.leds.fill(0x00000000);
 		this.render();
 	}
 }
