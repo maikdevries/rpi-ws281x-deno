@@ -11,7 +11,7 @@ export default class Controller {
 	private static defaults: Strip = {
 		'frequency': 800000,
 		'dma': 10,
-		channels: [
+		'channels': [
 			{
 				'gpio': 18,
 				'invert': false,
