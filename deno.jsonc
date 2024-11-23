@@ -7,7 +7,6 @@
 			"deno.window",
 		],
 
-		"allowJs": false,
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
 		"checkJs": false,
