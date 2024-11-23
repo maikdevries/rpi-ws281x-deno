@@ -1,4 +1,7 @@
 {
+	"name": "@maikdevries/rpi-ws281x",
+	"version": "0.1.0",
+	"exports": "./mod.ts",
 	"compilerOptions": {
 		"lib": [
 			"deno.window",
