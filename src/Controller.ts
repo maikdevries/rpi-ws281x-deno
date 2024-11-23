@@ -63,7 +63,7 @@ class Control {
 	}
 
 	set colour(value: number[]) {
-		if (!value.length) throw new Error();
+		if (!value.length || !value.every((v) => typeof v === 'number' && v >= 0x00000000 && v <= 0xFFFFFFFF)) throw new Error();
 
 		this.channel.leds.forEach((_, i) => this.channel.leds[i] = value[i % value.length] as number);
 		this.render();
