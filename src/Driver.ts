@@ -116,15 +116,21 @@ export default class Driver {
 		if (!this.buffer?.length || !this.view) throw new Error('Driver must be initialised before retrieving channels');
 
 		try {
-			const channels: [ChannelData] = [{
-				'leds': Driver.retrieve(this.view, 48, this.config.channels[0].count),
-				'brightness': this.buffer.subarray(56, 57),
-			}];
+			const channels: [ChannelData] | [ChannelData, ChannelData] = [
+				{
+					'leds': Driver.retrieve(this.view, 48, this.config.channels[0].count),
+					'brightness': this.buffer.subarray(56, 57),
+				},
+				(this.config.channels[1] && {
+					'leds': Driver.retrieve(this.view, 88, this.config.channels[1].count),
+					'brightness': this.buffer.subarray(96, 97),
+				}) as ChannelData,
+			];
 
-			return !this.config.channels[1] ? channels : [...channels, {
-				'leds': Driver.retrieve(this.view, 88, this.config.channels[1].count),
-				'brightness': this.buffer.subarray(96, 97),
-			}];
+			// [NOTE] FFI permissions are no longer required after initialisation
+			Deno.permissions.revokeSync({ 'name': 'ffi' });
+
+			return channels;
 		} catch (error: unknown) {
 			this.finalise();
 			throw error;
