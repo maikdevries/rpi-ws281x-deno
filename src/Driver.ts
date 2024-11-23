@@ -31,7 +31,6 @@ export default class Driver {
 
 	// [REF] https://github.com/jgarff/rpi_ws281x/blob/7fc0bf8b31d715bbecf28e852ede5aaa388180da/ws2811.h#L86
 	private static allocate(config: Strip): [Uint8Array, DataView] {
-		// [NOTE] Allocate memory through Uint8Array for optimised performance
 		const buffer = new Uint8Array(112);
 		if (!buffer?.length) throw new Error();
 

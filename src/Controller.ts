@@ -33,7 +33,7 @@ export default class Controller {
 		this.driver = new Driver({
 			'frequency': config.frequency ?? Controller.defaults.frequency,
 			'dma': config.dma ?? Controller.defaults.dma,
-			channels: config.channels.map((channel, i) => ({
+			'channels': config.channels.map((channel, i) => ({
 				...Controller.defaults.channels[i],
 				...channel,
 			})) as [Channel] | [Channel, Channel],

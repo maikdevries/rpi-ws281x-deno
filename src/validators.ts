@@ -2,7 +2,6 @@ import type { Channel, Strip, Validator } from './types.ts';
 
 import { STRIP_TYPES } from './types.ts';
 
-
 function validate<T>(validators: Validator<T>): (value: unknown) => value is T {
 	return ((value: unknown): value is T => {
 		if (typeof value !== 'object' || value === null) return false;
