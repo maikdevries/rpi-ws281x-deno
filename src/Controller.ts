@@ -58,4 +58,11 @@ class Control {
 		this.channel.brightness.set([value]);
 		this.render();
 	}
+
+	set colour(value: number[]) {
+		if (!value.length) throw new Error();
+
+		this.channel.leds.forEach((_, i) => this.channel.leds[i] = value[i % value.length] as number);
+		this.render();
+	}
 }
