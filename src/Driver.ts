@@ -22,17 +22,17 @@ export default class Driver {
 	private view: DataView | null;
 
 	constructor(private readonly config: Strip) {
-		if (!validate.strip(config)) throw new Error();
+		if (!validate.strip(config)) throw new Error('Strip configuration must be valid');
 
 		[this.buffer, this.view] = Driver.allocate(this.config);
 
-		if (bindings.symbols.ws2811_init(this.buffer) !== STATUS.SUCCESS) throw new Error();
+		if (bindings.symbols.ws2811_init(this.buffer) !== STATUS.SUCCESS) throw new Error('Failed to initialise driver');
 	}
 
 	// [REF] https://github.com/jgarff/rpi_ws281x/blob/7fc0bf8b31d715bbecf28e852ede5aaa388180da/ws2811.h#L86
 	private static allocate(config: Strip): [Uint8Array, DataView] {
 		const buffer = new Uint8Array(112);
-		if (!buffer?.length) throw new Error();
+		if (buffer?.length !== 112) throw new Error('Failed to allocate memory for driver initialisation');
 
 		const view = new DataView(buffer.buffer);
 		let offset = 0;
@@ -102,16 +102,16 @@ export default class Driver {
 
 	private static retrieve(view: DataView, offset: number, size: number): Uint32Array {
 		const pointer = Deno.UnsafePointer.create(view.getBigUint64(offset, Driver.ENDIANNESS));
-		if (!pointer) throw new Error();
+		if (!pointer) throw new Error('Failed to retrieve pointer to LED buffer');
 
 		const buffer = new Uint32Array(Deno.UnsafePointerView.getArrayBuffer(pointer, size * 4));
-		if (!buffer?.length) throw new Error();
+		if (buffer?.length !== size) throw new Error('Failed to retrieve LED buffer from pointer');
 
 		return buffer;
 	}
 
 	public retrieveChannels(): [ChannelData] | [ChannelData, ChannelData] {
-		if (!this.buffer?.length || !this.view) throw new Error();
+		if (!this.buffer?.length || !this.view) throw new Error('Driver must be initialised before retrieving channels');
 
 		const channels: [ChannelData] = [{
 			'leds': Driver.retrieve(this.view, 48, this.config.channels[0].count),
@@ -125,7 +125,7 @@ export default class Driver {
 	}
 
 	public finalise(): void {
-		if (!this.buffer?.length || !this.view) throw new Error();
+		if (!this.buffer?.length || !this.view) throw new Error('Driver must be initialised before finalising');
 
 		bindings.symbols.ws2811_fini(this.buffer);
 
@@ -136,8 +136,8 @@ export default class Driver {
 	}
 
 	public render(): void {
-		if (!this.buffer?.length || !this.view) throw new Error();
+		if (!this.buffer?.length || !this.view) throw new Error('Driver must be initialised before rendering');
 
-		if (bindings.symbols.ws2811_render(this.buffer) !== STATUS.SUCCESS) throw new Error();
+		if (bindings.symbols.ws2811_render(this.buffer) !== STATUS.SUCCESS) throw new Error('Failed to render LED buffer');
 	}
 }

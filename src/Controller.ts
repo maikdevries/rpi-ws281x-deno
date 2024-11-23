@@ -56,14 +56,16 @@ class Control {
 	constructor(private readonly channel: ChannelData, private readonly render: () => void) {}
 
 	set brightness(value: number) {
-		if (value < 0 || value > 255) throw new Error();
+		if (value < 0 || value > 255) throw new RangeError('Channel brightness must be an integer in range [0, 255]');
 
 		this.channel.brightness.set([value]);
 		this.render();
 	}
 
 	set colour(value: number[]) {
-		if (!value.length || !value.every((v) => typeof v === 'number' && v >= 0x00000000 && v <= 0xFFFFFFFF)) throw new Error();
+		if (!value.length || !value.every((v) => typeof v === 'number' && v >= 0x00000000 && v <= 0xFFFFFFFF)) {
+			throw new RangeError('Channel colour must be an array of integers in range [0x00000000, 0xFFFFFFFF]');
+		}
 
 		this.channel.leds.forEach((_, i) => this.channel.leds[i] = value[i % value.length] as number);
 		this.render();
