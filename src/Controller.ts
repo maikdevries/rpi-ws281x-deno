@@ -65,4 +65,9 @@ class Control {
 		this.channel.leds.forEach((_, i) => this.channel.leds[i] = value[i % value.length] as number);
 		this.render();
 	}
+
+	public flush(): void {
+		this.channel.leds.fill(0x00000000);
+		this.render();
+	}
 }
