@@ -4,7 +4,7 @@ import { STATUS, STRIP_TYPES } from './types.ts';
 import * as validate from './validators.ts';
 
 const bindings = Deno.dlopen(
-	'./lib/ws2811.so',
+	new URL('../lib/ws2811.so', import.meta.url),
 	{
 		ws2811_init: { parameters: ['buffer'], result: 'i32' },
 		ws2811_fini: { parameters: ['buffer'], result: 'void' },
