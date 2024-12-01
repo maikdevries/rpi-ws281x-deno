@@ -4,9 +4,8 @@
 	"exports": "./mod.ts",
 	"compilerOptions": {
 		"lib": [
-			"deno.window",
+			"deno.window"
 		],
-
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
 		"checkJs": false,
@@ -28,27 +27,27 @@
 		"strictNullChecks": true,
 		"strictPropertyInitialization": true,
 		"useUnknownInCatchVariables": true,
-		"verbatimModuleSyntax": true,
+		"verbatimModuleSyntax": true
 	},
 	"fmt": {
 		"include": [
-			"src/**/*.ts",
+			"src/**/*.ts"
 		],
-
 		"useTabs": true,
 		"lineWidth": 140,
 		"indentWidth": 4,
 		"singleQuote": true,
 		"proseWrap": "always",
-		"semiColons": true,
+		"semiColons": true
 	},
 	"lint": {
 		"include": [
-			"src/**/*.ts",
+			"src/**/*.ts"
 		],
-
 		"rules": {
-			"tags": ["recommended"],
+			"tags": [
+				"recommended"
+			],
 			"include": [
 				"camelcase",
 				"default-param-last",
@@ -73,9 +72,9 @@
 				"prefer-ascii",
 				"single-var-declarator",
 				"triple-slash-reference",
-				"verbatim-module-syntax",
-			],
-		},
+				"verbatim-module-syntax"
+			]
+		}
 	},
 	"publish": {
 		"include": [
@@ -87,7 +86,7 @@
 			"src/**/*.ts",
 			"LICENSE",
 			"mod.ts",
-			"README.md",
-		],
-	},
+			"README.md"
+		]
+	}
 }
