@@ -1,10 +1,14 @@
 import type { ChannelData, Strip } from './types.ts';
 
+import meta from './../deno.json' with { 'type': 'json' };
+import { dlopen } from '@denosaurs/plug';
 import { STATUS, STRIP_TYPES } from './types.ts';
 import * as validate from './validators.ts';
 
-const bindings = Deno.dlopen(
-	new URL('../lib/ws2811.so', import.meta.url),
+const bindings = await dlopen(
+	{
+		'url': new URL(`${meta.name}/${meta.version}/lib/ws2811.so`, 'https://jsr.io'),
+	},
 	{
 		ws2811_init: { parameters: ['buffer'], result: 'i32' },
 		ws2811_fini: { parameters: ['buffer'], result: 'void' },

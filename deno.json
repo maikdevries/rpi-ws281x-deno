@@ -88,5 +88,8 @@
 			"mod.ts",
 			"README.md"
 		]
+	},
+	"imports": {
+		"@denosaurs/plug": "jsr:@denosaurs/plug@^1.0.6"
 	}
 }
