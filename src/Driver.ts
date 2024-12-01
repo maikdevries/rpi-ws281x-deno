@@ -18,6 +18,10 @@ const bindings = await dlopen(
 	} as const,
 );
 
+// [NOTE] Read and write permissions are no longer required after fetching shared library binary
+Deno.permissions.revokeSync({ 'name': 'read' });
+Deno.permissions.revokeSync({ 'name': 'write' });
+
 export default class Driver {
 	private static ENDIANNESS = true;
 
