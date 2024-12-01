@@ -71,7 +71,7 @@ class Control {
 			throw new RangeError('Channel colour must be an array of integers in range [0x00000000, 0xFFFFFFFF]');
 		}
 
-		this.channel.leds.forEach((_, i) => this.channel.leds[i] = value[i % value.length] as number);
+		for (const i of this.channel.leds.keys()) this.channel.leds[i] = value[i % value.length] as number;
 		this.render();
 	}
 }
