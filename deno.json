@@ -2,6 +2,19 @@
 	"name": "@maikdevries/rpi-ws281x",
 	"version": "0.1.0",
 	"exports": "./mod.ts",
+	"tasks": {
+		"fetch": {
+			"command": "git submodule update --init --recursive",
+			"description": "Initialise, fetch and checkout the latest updates for the jgarff/rpi_ws281x library"
+		},
+		"build": {
+			"command": "gcc -shared -O2 -fPIC -Wall -Werror -o ./lib/ws2811.so ./lib/rpi_ws281x/dma.c ./lib/rpi_ws281x/mailbox.c ./lib/rpi_ws281x/pcm.c ./lib/rpi_ws281x/pwm.c ./lib/rpi_ws281x/rpihw.c ./lib/rpi_ws281x/ws2811.c",
+			"description": "Build the shared library using the latest upstream updates of the jgarff/rpi_ws281x library",
+			"dependencies": [
+				"fetch"
+			]
+		}
+	},
 	"compilerOptions": {
 		"lib": [
 			"deno.window"
