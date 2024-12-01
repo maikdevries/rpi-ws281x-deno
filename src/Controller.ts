@@ -13,7 +13,7 @@ export default class Controller {
 		'dma': 10,
 		'channels': [
 			{
-				'gpio': 18,
+				'gpio': 10,
 				'invert': false,
 				'count': 0,
 				'strip': 'WS2812',
